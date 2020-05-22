@@ -33,9 +33,34 @@ class RoomProvider extends Component {
         })
     }
     handleChange = (e) =>{
-        const type = e.target.type
+        
+        const target = e.target
+        // const type = e.target.type
         const name = e.target.name
-        const value = e.target.value 
+        
+        const value = e.type === 'checkbox' ? target.checked : target.value
+        this.setState({
+            [name]:value
+        },this.filterRooms)
+    }
+    filterRooms = () => {
+       let {
+           rooms, type, capacity, price, minSize, maxSize, breakfast, pets
+       } = this.state
+       capacity = parseInt(capacity)
+       price = parseInt(price)
+       let tempRoom = [...rooms]
+       if(type !== 'all'){
+         tempRoom = tempRoom.filter(item => item.type == type)
+       }
+       if(capacity !== 1){
+        tempRoom = tempRoom.filter(item => item.capacity >= capacity)
+      }
+      if(price !== 0){
+        tempRoom = tempRoom.filter(item => item.price <= price)
+      }
+       this.setState({sortedRooms:tempRoom})
+       
     }
     formatData =(item)=>{
          let tempItem = item.map(item => {
@@ -51,9 +76,10 @@ class RoomProvider extends Component {
        const room = tempRoom.find(room => room.slug === slug)
        return room
     }
+    
     render() {
         return (
-           <RoomContext.Provider value={{...this.state , getRoom:this.getRoom}}>
+           <RoomContext.Provider value={{...this.state , getRoom:this.getRoom , handleChange:this.handleChange}}>
             {this.props.children}
            </RoomContext.Provider>
         )
