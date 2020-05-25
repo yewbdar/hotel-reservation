@@ -53,7 +53,7 @@ class RoomProvider extends Component {
        if(type !== 'all'){
          tempRoom = tempRoom.filter(item => item.type === type)
        }
-       if(capacity !== 1){
+       if(capacity !== 1) {
         tempRoom = tempRoom.filter(item => item.capacity >= capacity)
       }
       if(price !== 0){
